@@ -1,12 +1,11 @@
 import re
 import pandas
 
-
 tweet_set = set()
 
 #remove duplicates, after removing URLs
-output = open('/Users/teoflev/Desktop/thesis_code/tweets/no_dup_tweets.txt', 'w')
-with open('/Users/teoflev/Desktop/thesis_code/tweets/out_tweets.txt','r') as tweets:
+output = open('/Users/teoflev/Desktop/thesis_code/thesis/tweets/no_dup_tweets.txt', 'w')
+with open('/Users/teoflev/Desktop/thesis_code/thesis/tweets/out_tweets.txt','r') as tweets:
     while True:
         tweet = tweets.readline()
         if not tweet:
@@ -16,7 +15,6 @@ with open('/Users/teoflev/Desktop/thesis_code/tweets/out_tweets.txt','r') as twe
         if tweet in tweet_set:
             output.write(tweet)
         
-
 output.close()
 
 
