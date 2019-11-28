@@ -11,7 +11,10 @@ with open('/Users/teoflev/Desktop/thesis_code/thesis/tweets/clean_tweets.txt','w
             line = re.sub("/n", " ", line)
             line = re.sub("http", "\n http", line)
             line = re.sub(r"http\S+", "\n", line)
-            tweet_set.add(line)
+
+            if(len(line.split()) > 4):
+                tweet_set.add(line)
+
             if line in tweet_set:
                 fout.write(line)
     
