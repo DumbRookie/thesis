@@ -1,4 +1,4 @@
-import spacy
+
 import string
 import emoji
 from translation import google
