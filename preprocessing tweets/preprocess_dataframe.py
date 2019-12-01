@@ -37,7 +37,6 @@ def add_whitespace(item):
     return item
 
 def translate_words(lemma):
-
     lemmas = replace_punctuation(lemma)
     lemma_list = lemmas.split(' ')
     lemma_list = list(filter(None, lemma_list))
@@ -69,45 +68,54 @@ def remove_english(lemma):
         lex = nlp.vocab[word]
         if lex.is_stop == True:
             lemma_list.remove(word)
-        
-        if (len(word) == 3)  and (word.isdigit == False):
-            lemma_list.remove(word)
 
     returned_lemma = ' '.join(lemma_list)
     return nlp(returned_lemma)
 
+def remove_small_words(entry):
+    lemmas = replace_punctuation(entry)
+    lemma_list = lemmas.split(' ')
+    lemma_list = list(filter(None, lemma_list))
+    for word in lemma_list:
+        if (len(word) == 1 or len (word) == 2) and not word.isdigit():
+            lemma_list.remove(word)
+
+    returned_lemma = ' '.join(lemma_list)
+    return nlp(returned_lemma)
 #-------------------------------------------------------------------------------------------------------------------------
 
 # Removing Emojis
-tweet_frame['No_Emoji_Tweet'] = [emoji.demojize(str(lemma)) for lemma in tweet_frame.Tweet]
-
-# Tokenize tweets
-tweet_frame['Token'] = [nlp(text) for text in tweet_frame.No_Emoji_Tweet]
-
-# Lemmatization
-tweet_frame['Lemmatized_Tokens'] = [lemmatize(tweet) for tweet in tweet_frame.No_Emoji_Tweet]
+tweet_frame['No_Emoji_Tweet'] = [emoji.demojize(str(tweet)) for tweet in tweet_frame.Tweet]
 
 # Replacing Punctuation with Whitespace
-tweet_frame['No_Punctuation'] = [replace_punctuation(str(no_e_lemma)) for no_e_lemma in tweet_frame.Lemmatized_Tokens]
-tweet_frame['No_Punctuation_Lemma'] = [str(lemma).split(' ') for lemma in tweet_frame.No_Punctuation]
-tweet_frame = tweet_frame.drop('No_Punctuation', axis = 1)
+tweet_frame['No_Punctuation'] = [replace_punctuation(str(no_e_entry)) for no_e_entry in tweet_frame.No_Emoji_Tweet]
 
 # Adding Whitespace between Numbers and Words
-tweet_frame['new_No_Punctuation_Lemma'] = [add_whitespace(str(lemma)) for lemma in tweet_frame.No_Punctuation_Lemma]
+tweet_frame['new_No_Punctuation'] = [add_whitespace(str(entry)) for entry in tweet_frame.No_Punctuation]
 
 # Translating English words, filtering out word that are written with English alphabet but aren't valid English words.
-tweet_frame['Translated_Lemma'] = [translate_words(str(lemma)) for lemma in tweet_frame.new_No_Punctuation_Lemma]
+tweet_frame['Translated_Lemma'] = [translate_words(str(lemma)) for lemma in tweet_frame.new_No_Punctuation]
 
-# Remove any English Remnant words and also remove stopwords, or small words <2 characters
+# Remove any English Remnant words and also remove stopwords
 tweet_frame['Greek_Lemma'] = [remove_english(str(lemma)) for lemma in tweet_frame.Translated_Lemma]
+
+#remove word that are one or two-character long
+tweet_frame['Greek_Words'] =[remove_small_words(str(lemma)) for lemma in tweet_frame.Greek_Lemma]
+
+# Tokenize tweets
+tweet_frame['Token'] = [nlp(str(text)) for text in tweet_frame.Greek_Words]
+
+# Lemmatization
+tweet_frame['Lemmatized_Tokens'] = [lemmatize(str(tweet)) for tweet in tweet_frame.Token]
 
 #-------------------------------------------------------------------------------------------------------------------------
 tweet_frame = tweet_frame.drop('Token', axis = 1)
 tweet_frame = tweet_frame.drop('No_Emoji_Tweet', axis = 1)
-tweet_frame = tweet_frame.drop('Lemmatized_Tokens', axis = 1)
-tweet_frame = tweet_frame.drop('No_Punctuation_Lemma', axis = 1)
-tweet_frame = tweet_frame.drop('new_No_Punctuation_Lemma', axis = 1)
+tweet_frame = tweet_frame.drop('Greek_Lemma', axis = 1)
+tweet_frame = tweet_frame.drop('new_No_Punctuation', axis = 1)
 tweet_frame = tweet_frame.drop('Translated_Lemma', axis = 1)
+tweet_frame = tweet_frame.drop('No_Punctuation', axis = 1)
+tweet_frame = tweer_frame.drop('Greek_Words', axis = 1)
 
 print (tweet_frame)
 
