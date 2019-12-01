@@ -115,7 +115,7 @@ tweet_frame = tweet_frame.drop('Greek_Lemma', axis = 1)
 tweet_frame = tweet_frame.drop('new_No_Punctuation', axis = 1)
 tweet_frame = tweet_frame.drop('Translated_Lemma', axis = 1)
 tweet_frame = tweet_frame.drop('No_Punctuation', axis = 1)
-tweet_frame = tweer_frame.drop('Greek_Words', axis = 1)
+tweet_frame = tweet_frame.drop('Greek_Words', axis = 1)
 
 print (tweet_frame)
 
