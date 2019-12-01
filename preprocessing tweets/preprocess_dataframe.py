@@ -69,6 +69,9 @@ def remove_english(lemma):
         lex = nlp.vocab[word]
         if lex.is_stop == True:
             lemma_list.remove(word)
+        
+        if (len(word) == 3)  and (word.isdigit == False):
+            lemma_list.remove(word)
 
     returned_lemma = ' '.join(lemma_list)
     return nlp(returned_lemma)
@@ -95,7 +98,7 @@ tweet_frame['new_No_Punctuation_Lemma'] = [add_whitespace(str(lemma)) for lemma 
 # Translating English words, filtering out word that are written with English alphabet but aren't valid English words.
 tweet_frame['Translated_Lemma'] = [translate_words(str(lemma)) for lemma in tweet_frame.new_No_Punctuation_Lemma]
 
-# Remove any English Remnant words and also remove stopwords
+# Remove any English Remnant words and also remove stopwords, or small words <2 characters
 tweet_frame['Greek_Lemma'] = [remove_english(str(lemma)) for lemma in tweet_frame.Translated_Lemma]
 
 #-------------------------------------------------------------------------------------------------------------------------
