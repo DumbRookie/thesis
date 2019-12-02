@@ -119,5 +119,5 @@ tweet_frame = tweet_frame.drop('Greek_Words', axis = 1)
 
 print (tweet_frame)
 
-tweet_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/tweets/tweet_frame_2.csv', index = None)
+tweet_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/tweets/preprocessed_tweet_frame.csv', index = None)
 
