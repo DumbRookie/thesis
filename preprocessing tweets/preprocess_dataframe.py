@@ -1,8 +1,6 @@
 import emoji
 import pandas as pd 
 import spacy
-import matplotlib.pyplot as plt
-import seaborn as sns
 import re
 import string
 from num2words import num2words
@@ -36,10 +34,15 @@ def add_whitespace(item):
     item = re.sub(r"([0-9]+(\.[0-9]+)?)",r" \1 ", item)
     return item
 
-def translate_words(lemma):
-    lemmas = replace_punctuation(lemma)
+def translate_words(item):
+    lemmas = replace_punctuation(item)
     lemma_list = lemmas.split(' ')
     lemma_list = list(filter(None, lemma_list))
+    for word in lemma_list:
+        if word.isdigit():
+            lemma_list.append(num2words(word))
+            lemma_list.remove(word)
+
     for word in lemma_list:
             if not word.isdigit():
                 if all(char in english_letters for char in word):
@@ -94,10 +97,10 @@ tweet_frame['No_Punctuation'] = [replace_punctuation(str(no_e_entry)) for no_e_e
 tweet_frame['new_No_Punctuation'] = [add_whitespace(str(entry)) for entry in tweet_frame.No_Punctuation]
 
 # Translating English words, filtering out word that are written with English alphabet but aren't valid English words.
-tweet_frame['Translated_Lemma'] = [translate_words(str(lemma)) for lemma in tweet_frame.new_No_Punctuation]
+tweet_frame['Translated_Tweet'] = [translate_words(str(entry)) for entry in tweet_frame.new_No_Punctuation]
 
 # Remove any English Remnant words and also remove stopwords
-tweet_frame['Greek_Lemma'] = [remove_english(str(lemma)) for lemma in tweet_frame.Translated_Lemma]
+tweet_frame['Greek_Tweet'] = [remove_english(str(entry)) for entry in tweet_frame.Translated_Tweet]
 
 # Remove word that are one or two-character long
 tweet_frame['Greek_Words'] =[remove_small_words(str(lemma)) for lemma in tweet_frame.Greek_Lemma]
