@@ -103,7 +103,7 @@ tweet_frame['Translated_Tweet'] = [translate_words(str(entry)) for entry in twee
 tweet_frame['Greek_Tweet'] = [remove_english(str(entry)) for entry in tweet_frame.Translated_Tweet]
 
 # Remove word that are one or two-character long
-tweet_frame['Greek_Words'] =[remove_small_words(str(lemma)) for lemma in tweet_frame.Greek_Lemma]
+tweet_frame['Greek_Words'] =[remove_small_words(str(lemma)) for lemma in tweet_frame.Greek_Tweet]
 
 # Tokenize tweets
 tweet_frame['Token'] = [nlp(str(text)) for text in tweet_frame.Greek_Words]
@@ -114,9 +114,9 @@ tweet_frame['Lemmatized_Tokens'] = [lemmatize(str(tweet)) for tweet in tweet_fra
 #-------------------------------------------------------------------------------------------------------------------------
 tweet_frame = tweet_frame.drop('Token', axis = 1)
 tweet_frame = tweet_frame.drop('No_Emoji_Tweet', axis = 1)
-tweet_frame = tweet_frame.drop('Greek_Lemma', axis = 1)
+tweet_frame = tweet_frame.drop('Greek_Tweet', axis = 1)
 tweet_frame = tweet_frame.drop('new_No_Punctuation', axis = 1)
-tweet_frame = tweet_frame.drop('Translated_Lemma', axis = 1)
+tweet_frame = tweet_frame.drop('Translated_Tweet', axis = 1)
 tweet_frame = tweet_frame.drop('No_Punctuation', axis = 1)
 tweet_frame = tweet_frame.drop('Greek_Words', axis = 1)
 
