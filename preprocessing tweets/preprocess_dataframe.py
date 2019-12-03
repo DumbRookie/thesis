@@ -99,7 +99,7 @@ tweet_frame['Translated_Lemma'] = [translate_words(str(lemma)) for lemma in twee
 # Remove any English Remnant words and also remove stopwords
 tweet_frame['Greek_Lemma'] = [remove_english(str(lemma)) for lemma in tweet_frame.Translated_Lemma]
 
-#remove word that are one or two-character long
+# Remove word that are one or two-character long
 tweet_frame['Greek_Words'] =[remove_small_words(str(lemma)) for lemma in tweet_frame.Greek_Lemma]
 
 # Tokenize tweets
