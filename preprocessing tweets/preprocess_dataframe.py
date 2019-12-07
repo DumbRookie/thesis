@@ -120,7 +120,10 @@ tweet_frame = tweet_frame.drop('Translated_Tweet', axis = 1)
 tweet_frame = tweet_frame.drop('No_Punctuation', axis = 1)
 tweet_frame = tweet_frame.drop('Greek_Words', axis = 1)
 
-tweet_frame.dropna(how='any')
+for row in tweet_frame.Lemmatized_Tokens:
+    if str(row) == '[]':
+        tweet_frame.drop(row, axis = 0)
+
 print (tweet_frame)
 tweet_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/tweets/preprocessed_tweet_frame.csv', index = None)
 
