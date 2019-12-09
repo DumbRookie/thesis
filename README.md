@@ -9,3 +9,9 @@ The code is organized into folders, each with a name explaining its use. Each fi
 necessary.
 
 All the .txt data are versions of the data that will be used for this analysis.
+
+To recreate the results of this thesis, run the files in the following order:
+
+1) clean_data.py
+2) preprocess_dataframe.py
+3) polarity.py
