@@ -8,12 +8,14 @@ from googletrans import Translator
 import enchant
 
 punct = set(string.punctuation)
+punct.add('«')
+punct.add('»')
 
 dictionary = enchant.Dict("en_US")
 
 translator = Translator()
 
-english_letters = set(string.printable)
+english_letters = set(string.ascii_letters)
 
 tweet_frame = pd.read_csv("/Users/teoflev/Desktop/thesis_code/thesis/tweets/tweet_frame.csv") 
 
@@ -31,6 +33,7 @@ def replace_punctuation(item):
 
 def add_whitespace(item):
     item = re.sub(r'([a-zA-Z])([,.:_!])', r'\1 \2', item)
+    item = re.sub(r'([a-zA-Z])([^a-zA-Z])', r'\1 \2', item)
     item = re.sub(r"([0-9]+(\.[0-9]+)?)",r" \1 ", item)
     return item
 
@@ -126,4 +129,6 @@ for row in tweet_frame.Lemmatized_Tokens:
 
 print (tweet_frame)
 tweet_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/tweets/preprocessed_tweet_frame.csv', index = None)
+
+
 
