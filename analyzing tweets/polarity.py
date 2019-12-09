@@ -2,6 +2,7 @@ from polyglot.text import Text, Word
 import pandas as pd
 import re
 import string
+import matplotlib.pyplot as plt
 
 punct = set(string.punctuation)
 punct.add('«')
@@ -35,5 +36,29 @@ def polarize(item):
 
 tweet_frame['Polarity'] = [polarize(str(item)) for item in tweet_frame.Lemmatized_Tokens]
 
-print (tweet_frame)
 tweet_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/tweets/polarized_tweet_frame.csv', index = None)
+
+
+polarity_values = tweet_frame.Polarity
+values = polarity_values.value_counts()
+
+results = values.as_matrix(columns = None)
+
+neutral_opinion = results[0]
+negative_opinion = results[1]
+positive_opinion = results[2]
+
+
+# Data to plot
+labels = 'Positive', 'Negative'
+sizes = [positive_opinion, negative_opinion]
+colors = ['green', 'crimson']
+explode = (0, 0)
+
+
+# Plot
+plt.pie(sizes, explode=explode, labels=labels, colors=colors,
+autopct='%1.1f%%', shadow=True, startangle=140)
+
+plt.axis('equal')
+plt.show()
