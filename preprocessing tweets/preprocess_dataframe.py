@@ -51,7 +51,7 @@ def translate_words(item):
                 if all(char in english_letters for char in word):
                     if dictionary.check(word) is True:
                         try:
-                            new_word = translator.translate(word, dest= 'el')
+                            new_word = translator.translate(word, dest= 'el').text
                             gr_word = str(new_word)
                             lemma_list.remove(word)
                             lemma_list.append(gr_word)
