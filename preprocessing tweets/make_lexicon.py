@@ -67,3 +67,4 @@ lexicon_frame = pd.concat(dataframes)
 
 lexicon_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/lexiconframe.csv', index = None)
 print(lexicon_frame)
+
