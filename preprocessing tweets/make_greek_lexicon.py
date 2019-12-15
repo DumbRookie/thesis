@@ -1,12 +1,15 @@
 import pandas as pd
 from multiprocessing import Pool
-from dask import delayed
 from googletrans import Translator
 import string
 import enchant
 from num2words import num2words
 import re
 import nltk 
+from pandarallel import pandarallel
+
+
+pandarallel.initialize()
 
 dictionary = enchant.Dict("en_UK")
 translator = Translator()
@@ -64,7 +67,7 @@ def replace_sentiment(feeling):
     else:
         return 'εμπιστοσύνη'
 
-workers = Pool()
+#workers = Pool()
 """
 lexicon_frame = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/resources/lexiconframe.csv')
 
@@ -81,10 +84,12 @@ if __name__ == '__main__':
     lexicon_frame = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/resources/half_lexiconframe.csv')
    
 
-    lexicon_frame['Gr_Contnent'] = workers.map(translate_words,lexicon_frame.Content)
-    workers.close()
-    workers.join()
+    #lexicon_frame['Gr_Contnent'] = workers.map(translate_words,lexicon_frame.Content)
+    #workers.close()
+    #workers.join()
 
+    lexicon_frame['Gr_Content'] = lexicon_frame['Content'].parallel_apply(lambda item : translate_words(item) )
+ 
     lexicon_frame = lexicon_frame.drop('Content', axis = 1)
 
     print(lexicon_frame)
