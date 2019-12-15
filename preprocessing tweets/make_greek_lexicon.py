@@ -7,6 +7,7 @@ from num2words import num2words
 import re
 import nltk 
 from pandarallel import pandarallel
+import swifter
 
 
 pandarallel.initialize()
@@ -78,21 +79,21 @@ print (lexicon_frame)
 
 lexicon_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/half_lexiconframe.csv', index = None)
 
+
 """
-if __name__ == '__main__':
-   
-    lexicon_frame = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/resources/half_lexiconframe.csv')
+lexicon_frame = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/resources/half_lexiconframe.csv')
    
 
-    #lexicon_frame['Gr_Contnent'] = workers.map(translate_words,lexicon_frame.Content)
-    #workers.close()
-    #workers.join()
+#lexicon_frame['Gr_Contnent'] = workers.map(translate_words,lexicon_frame.Content)
+#workers.close()
+#workers.join()
 
-    lexicon_frame['Gr_Content'] = lexicon_frame['Content'].parallel_apply(lambda item : translate_words(item) )
- 
-    lexicon_frame = lexicon_frame.drop('Content', axis = 1)
+#lexicon_frame['Gr_Content'] = lexicon_frame['Content'].parallel_apply(lambda item : translate_words(item) )
+lexicon_frame['Gr_Content'] = lexicon_frame['Content'].swifter.apply(lambda item : translate_words(item) )
 
-    print(lexicon_frame)
+lexicon_frame = lexicon_frame.drop('Content', axis = 1)
 
-    lexicon_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/full_lexiconframe.csv', index = None)
+print(lexicon_frame)
+
+lexicon_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/full_lexiconframe.csv', index = None)
 
