@@ -54,7 +54,7 @@ tweet_frame['Polarity_Intensity'] = [degree_polarize(str(item)) for item in twee
 
 tweet_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/tweets/polarized_tweet_frame.csv', index = None)
 
-polarity_values = tweet_frame.Polarity_Intensity
+polarity_values = tweet_frame.Polarity
 values = polarity_values.value_counts()
 
 results = values.as_matrix(columns = None)
