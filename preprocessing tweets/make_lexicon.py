@@ -14,7 +14,7 @@ crowdflower1 = crowdflower1.drop('author', axis = 1)
 # Remove Username
 crowdflower1['Content'] = [re.sub('@[^\s]+','',str(entry)) for entry in crowdflower1.content]
 crowdflower1 = crowdflower1.drop('content', axis = 1)
-crowdflower1['Content'] = [nltk.word_tokenize(str(entry)) for entry in crowdflower1.Content]
+crowdflower1['Content'] = [(str(entry)) for entry in crowdflower1.Content]
 
 # Drop unneccesary sentiment 
 crowdflower1 = crowdflower1[crowdflower1['sentiment'].isin(emotions)]
@@ -26,7 +26,7 @@ crowdflower1.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/crowdf
 
 crowdflower2 = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/resources/crowdFlower/text_emotion2.txt', sep="  ")
 
-crowdflower2['Content'] = [nltk.word_tokenize(str(entry)) for entry in crowdflower2.content]
+crowdflower2['Content'] = [(str(entry)) for entry in crowdflower2.content]
 crowdflower2 = crowdflower2.drop('content', axis = 1)
 
 # Drop unneccesary sentiment 
@@ -39,7 +39,7 @@ crowdflower2.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/crowdf
 
 isear = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/resources/ISEAR/isear.csv', sep="---", error_bad_lines=False)
 
-isear['Content'] = [nltk.word_tokenize(str(entry)) for entry in isear.content]
+isear['Content'] = [(str(entry)) for entry in isear.content]
 isear = isear.drop('content', axis = 1)
 
 # Drop unneccesary sentiment 
@@ -52,7 +52,7 @@ isear.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/isearframe.cs
 
 nrc = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/resources/NRC/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt', sep= '--', error_bad_lines=False)
 
-nrc['Content'] = [nltk.word_tokenize(str(entry)) for entry in nrc.content]
+nrc['Content'] = [(str(entry)) for entry in nrc.content]
 nrc = nrc.drop('content', axis = 1)
 nrc = nrc.drop('irrelevant', axis = 1)
 # Drop unneccesary sentiment 
@@ -62,9 +62,9 @@ nrc.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/nrcframe.csv', 
 
 #----COMBINATION ---------------------------------
 
-dataframes = [crowdflower1, crowdflower2, isear, nrc]
+dataframes = [crowdflower1, crowdflower2, isear]
 lexicon_frame = pd.concat(dataframes)
 
-lexicon_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/lexiconframe.csv', index = None)
+lexicon_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/sentences.csv', index = None)
 print(lexicon_frame)
 
