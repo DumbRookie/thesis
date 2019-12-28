@@ -1,9 +1,27 @@
 import pandas as pd
+import spacy
+import string
 
-lexicon_frame1 = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/resources/greek_nrc.csv')
-lexicon_frame2 = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/resources/gr_sentences.csv')
+nlp = spacy.load("el_core_news_sm")
 
-dataframes = [lexicon_frame1, lexicon_frame2]
-lexicon_frame = pd.concat(dataframes)
 
-lexicon_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/full_lexicon.csv', index = None)
+english_letters = set(string.ascii_letters)
+
+def remove_english(lemma):
+    lemma_list = lemma.split(' ')
+    for word in lemma_list:
+        if all(char in english_letters for char in word):
+            lemma_list.remove(word)
+
+        lex = nlp.vocab[word]
+        if lex.is_stop == True:
+            lemma_list.remove(word)
+
+    returned_lemma = ' '.join(lemma_list)
+    return(returned_lemma)
+
+lexicon = pd.read_csv("/Users/teoflev/Desktop/thesis_code/thesis/resources/full_lexiconframe.csv") 
+lexicon['Final_Content'] = [remove_english(str(entry)) for entry in lexicon.Content]
+lexicon = lexicon.drop('Content', axis = 1)
+
+lexicon.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/emotion_lexicon.csv', index = None)
