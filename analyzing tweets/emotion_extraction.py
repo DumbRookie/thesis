@@ -112,10 +112,6 @@ def extract_emotion(text):
     return prevailing_emotion[0][0]
 
 
-
-
-
-
 tweet_frame['Emotion'] = [extract_emotion(tweet) for tweet in tweet_frame['Lemmatized_Tokens']]
 print(tweet_frame)
 tweet_frame.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/tweets/training_set_tweets.csv', index = None)
