@@ -1,4 +1,8 @@
 Text,Anger,Anticipation,Disgust,Fear,Joy,Sadness,Surprise,Trust,Emotion
+μαλακάς,0,0,0,0,0,0,0,1,['anger']
+σκούζετε,0,0,0,0,0,0,0,1,['sadness']
+τρελαθούμε,0,0,0,0,0,0,0,1,['disgust']
+μπινές,0,0,0,0,0,0,0,1,['anger']
 άβακας,0,0,0,0,0,0,0,1,['trust']
 εγκαταλείπω,0,0,0,1,0,1,0,0,"['fear', 'sadness']"
 εγκαταλειμμένος,1,0,0,1,0,1,0,0,"['anger', 'fear', 'sadness']"

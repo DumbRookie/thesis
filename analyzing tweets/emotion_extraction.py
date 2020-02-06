@@ -2,7 +2,7 @@ import pandas as pd
 import string
 import time
 tweet_frame = pd.read_csv("/Users/teoflev/Desktop/thesis_code/thesis/tweets/polarized_tweet_frame.csv", encoding='utf-8-sig')
-emotion_frame = pd.read_csv("/Users/teoflev/Desktop/thesis_code/thesis/resources/emotion.csv", encoding='utf-8-sig')
+emotion_frame = pd.read_csv("/Users/teoflev/Desktop/thesis_code/thesis/resources/6emotions.csv", encoding='utf-8-sig')
 nrc = pd.read_csv("/Users/teoflev/Desktop/thesis_code/thesis/resources/nrc.csv", encoding='utf-8-sig')
 progress_count = 0
 
