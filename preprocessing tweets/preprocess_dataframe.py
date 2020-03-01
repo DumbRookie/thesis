@@ -70,6 +70,9 @@ def remove_english(lemma):
     for word in lemma_list:
         if all(char in english_letters for char in word):
             lemma_list.remove(word)
+        
+        if word.isascii():
+            lemma_list.remove(word)
 
         lex = nlp.vocab[word]
         if lex.is_stop == True:
@@ -84,6 +87,9 @@ def remove_small_words(entry):
     lemma_list = list(filter(None, lemma_list))
     for word in lemma_list:
         if (len(word) == 1 or len (word) == 2) and not word.isdigit():
+            lemma_list.remove(word)
+
+        if word.isascii():
             lemma_list.remove(word)
 
     returned_lemma = ' '.join(lemma_list)
