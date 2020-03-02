@@ -15,3 +15,4 @@ To recreate the results of this thesis, run the files in the following order:
 1) clean_data.py
 2) preprocess_dataframe.py
 3) polarity.py
+4) emotion_extraction.py
