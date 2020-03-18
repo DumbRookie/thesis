@@ -6,10 +6,14 @@ from gensim.models import Word2Vec
 import numpy as np
 import time
 import string
+from keras.models import Sequential
+from keras import layers
+import matplotlib.pyplot as plt
+from keras.utils.np_utils import to_categorical
+from sklearn.preprocessing import LabelEncoder
 
 
-def create_embedding_matrix(text, word_index, embedding_dim):
-    vocab_size = len(word_index) + 1  
+def create_embedding_matrix(text, word_index, embedding_dim):  
     embedding_list = []
 
     for line in text:
@@ -20,25 +24,47 @@ def create_embedding_matrix(text, word_index, embedding_dim):
                 vec = []
             s = str(vec)
             vector = s[s.find("[")+1:s.find("]")]
-            print(word)
-            print(vector)
-            time.sleep(1)
             embedding_list.append(vector)
 
         embedding_matrix =  np.asarray(embedding_list)
     return embedding_matrix
 
+def plot_history(history):
+    acc = history.history['acc']
+    val_acc = history.history['val_acc']
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    x = range(1, len(acc) + 1)
+
+    plt.figure(figsize=(12, 5))
+    plt.subplot(1, 2, 1)
+    plt.plot(x, acc, 'b', label='Training acc')
+    plt.plot(x, val_acc, 'r', label='Validation acc')
+    plt.title('Training and validation accuracy')
+    plt.legend()
+    plt.subplot(1, 2, 2)
+    plt.plot(x, loss, 'b', label='Training loss')
+    plt.plot(x, val_loss, 'r', label='Validation loss')
+    plt.title('Training and validation loss')
+    plt.legend()
+
+embedding_dim = 64
 
 #Setting up the dataset
-
+#y = to_categorical(emotions, num_classes=len(list(emotions)))
 labeled_data = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/tweets/training_set_tweets.csv')
 w2v = Word2Vec.load("word2vec.model")
 
 sentences = labeled_data['Tweet'].values
-y = labeled_data['Emotion'].values
+emotions = labeled_data['Emotion'].values
+
+encoder = LabelEncoder()
+encoder.fit(emotions)
+encoded_Y = encoder.transform(emotions)
+y = to_categorical(encoded_Y)
 
 sentences_train,sentences_test,y_train,y_test = train_test_split(sentences, y, test_size=0.25, random_state=1000)
-tokenizer = Tokenizer(num_words=5000)
+tokenizer = Tokenizer(num_words=10000)
 tokenizer.fit_on_texts(sentences_train)
 
 X_train = tokenizer.texts_to_sequences(sentences_train)
@@ -52,6 +78,35 @@ X_train = pad_sequences(X_train, padding='post', maxlen=maxlen)
 X_test = pad_sequences(X_test, padding='post', maxlen=maxlen)
 
 #Creating the word embeddings
-
-embedding_dim = 64
 embedding_matrix = create_embedding_matrix(sentences, tokenizer.word_index, embedding_dim)
+
+# Creating the neural network
+
+model = Sequential()
+model.add(layers.Embedding(vocab_size, embedding_dim, input_length=maxlen))
+model.add(layers.Conv1D(128, 5, activation='relu'))
+model.add(layers.GlobalMaxPooling1D())
+model.add(layers.Dense(10, activation='relu'))
+# itan 1 ekana 9
+model.add(layers.Dense(9, activation='sigmoid'))
+model.compile(optimizer='adam',
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
+history = model.fit(X_train, y_train,
+                    epochs=10,
+                    validation_data=(X_test, y_test),
+                    batch_size=10)
+
+loss, accuracy = model.evaluate(X_train, y_train, verbose=False)
+print("Training Accuracy: {:.4f}".format(accuracy))
+loss, accuracy = model.evaluate(X_test, y_test, verbose=False)
+print("Testing Accuracy:  {:.4f}".format(accuracy))
+#plot_history(history)
+
+# serialize model to JSON
+model_json = model.to_json()
+with open("/Users/teoflev/Desktop/thesis_code/thesis/neural/model.json", "w") as json_file:
+    json_file.write(model_json)
+# serialize weights to HDF5
+model.save_weights("/Users/teoflev/Desktop/thesis_code/thesis/neural/model_weights.h5")
+model.save("/Users/teoflev/Desktop/thesis_code/thesis/neural/structured_model.h5")

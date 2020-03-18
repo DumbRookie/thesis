@@ -108,7 +108,7 @@ def extract_emotion(text):
         return 'ουδέτερο'
     
     progress_count += 1
-    print(str(round(100 * float(progress_count)/1438, 2)) + "%")
+    print(str(round(100 * float(progress_count)/2000, 2)) + "%")
     return prevailing_emotion[0][0]
 
 
