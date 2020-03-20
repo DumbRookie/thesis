@@ -10,9 +10,11 @@ necessary.
 
 All the .txt data are versions of the data that will be used for this analysis.
 
-To recreate the results of this thesis, run the files in the following order:
+To recreate the results found on this thesis, run the files in the following order:
 
 1) clean_data.py
 2) preprocess_dataframe.py
 3) polarity.py
 4) emotion_extraction.py
+
+To create the neural network, open the file cnn.py. This network uses embeddings created using word2vec found on the vectorize.py file. Both are in the directory called neural.
