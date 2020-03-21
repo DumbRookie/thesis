@@ -3,6 +3,8 @@ import gensim
 import pandas as pd
 import time
 from sklearn.feature_extraction.text import TfidfVectorizer
+from keras.preprocessing.text import Tokenizer
+
 import numpy as np
 import math
 from collections import defaultdict

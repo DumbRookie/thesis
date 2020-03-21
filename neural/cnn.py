@@ -14,39 +14,21 @@ from sklearn.preprocessing import LabelEncoder
 
 
 def create_embedding_matrix(text, word_index, embedding_dim):  
-    embedding_list = []
-
-    for line in text:
-        for word in line.split():
-            try:
-                vec = w2v[word.lower().translate(str.maketrans('', '', string.punctuation))]
-            except:
-                vec = []
-            s = str(vec)
-            vector = s[s.find("[")+1:s.find("]")]
-            embedding_list.append(vector)
-
-        embedding_matrix =  np.asarray(embedding_list)
+    embedding_matrix = np.zeros((vocab_size, embedding_dim))
+    for word in text:
+        try:
+            vec = w2v[word.lower()]
+        except:
+            vec = [1]*embedding_dim
+    for word, index in tokenizer.word_index.items():
+        if index > vocab_size - 1:
+            break
+        else: 
+            embedding_vector = vec
+            if embedding_vector is not None:
+                embedding_matrix[index] = embedding_vector
     return embedding_matrix
 
-def plot_history(history):
-    acc = history.history['acc']
-    val_acc = history.history['val_acc']
-    loss = history.history['loss']
-    val_loss = history.history['val_loss']
-    x = range(1, len(acc) + 1)
-
-    plt.figure(figsize=(12, 5))
-    plt.subplot(1, 2, 1)
-    plt.plot(x, acc, 'b', label='Training acc')
-    plt.plot(x, val_acc, 'r', label='Validation acc')
-    plt.title('Training and validation accuracy')
-    plt.legend()
-    plt.subplot(1, 2, 2)
-    plt.plot(x, loss, 'b', label='Training loss')
-    plt.plot(x, val_loss, 'r', label='Validation loss')
-    plt.title('Training and validation loss')
-    plt.legend()
 
 embedding_dim = 64
 
@@ -78,16 +60,15 @@ X_train = pad_sequences(X_train, padding='post', maxlen=maxlen)
 X_test = pad_sequences(X_test, padding='post', maxlen=maxlen)
 
 #Creating the word embeddings
-embedding_matrix = create_embedding_matrix(sentences, tokenizer.word_index, embedding_dim)
+embedding_matrix = create_embedding_matrix(tokenizer.word_docs.keys(), tokenizer.word_index, embedding_dim)
 
 # Creating the neural network
 
 model = Sequential()
-model.add(layers.Embedding(vocab_size, embedding_dim, input_length=maxlen))
+model.add(layers.Embedding(vocab_size, embedding_dim, input_length=maxlen, weights= [embedding_matrix]))
 model.add(layers.Conv1D(128, 5, activation='relu'))
 model.add(layers.GlobalMaxPooling1D())
 model.add(layers.Dense(10, activation='relu'))
-# itan 1 ekana 9
 model.add(layers.Dense(9, activation='sigmoid'))
 model.compile(optimizer='adam',
               loss='binary_crossentropy',
