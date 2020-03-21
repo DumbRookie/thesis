@@ -13,6 +13,7 @@ from keras.utils.np_utils import to_categorical
 from sklearn.preprocessing import LabelEncoder
 
 
+
 def create_embedding_matrix(text, word_index, embedding_dim):  
     embedding_matrix = np.zeros((vocab_size, embedding_dim))
     for word in text:
@@ -42,8 +43,10 @@ emotions = labeled_data['Emotion'].values
 
 encoder = LabelEncoder()
 encoder.fit(emotions)
-encoded_Y = encoder.transform(emotions)
+encoded_Y = encoder.fit_transform(emotions)
+print(encoder.classes_)
 y = to_categorical(encoded_Y)
+
 
 
 sentences_train,sentences_test,y_train,y_test = train_test_split(sentences, y, test_size=0.25, random_state=1000)

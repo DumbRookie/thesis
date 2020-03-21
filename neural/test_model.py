@@ -4,6 +4,10 @@ import numpy as np
 from keras.models import load_model
 from keras.preprocessing.text import Tokenizer
 import time
+import keras
+import pandas as pd
+from gensim.models import Word2Vec
+from sklearn.preprocessing import LabelEncoder
 
 input = open('/Users/teoflev/Desktop/thesis_code/thesis/tweets/unseen_tweets.txt', "r")
 
@@ -11,6 +15,19 @@ input = open('/Users/teoflev/Desktop/thesis_code/thesis/tweets/unseen_tweets.txt
 model =  load_model('/Users/teoflev/Desktop/thesis_code/thesis/neural/structured_model.h5')
 
 tokenizer = Tokenizer(num_words=10000)
+
+labels = ['έκπληξη', 'αηδία', 'ανυπομονησία', 'εμπιστοσύνη', 'θλίψη', 'θυμός', 'ουδέτερο', 'φόβος', 'χαρά']
+labeled_data = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/tweets/training_set_tweets.csv')
+w2v = Word2Vec.load("word2vec.model")
+
+sentences = labeled_data['Tweet'].values
+emotions = labeled_data['Emotion'].values
+
+encoder = LabelEncoder()
+encoder.fit(emotions)
+encoded_Y = encoder.fit_transform(emotions)
+
+
 
 
 embedding_dim = 64
@@ -34,14 +51,22 @@ def create_embedding_matrix(text, word_index, embedding_dim):
 
 
 for line in input.readlines():
-    tokenizer.fit_on_texts(line)
-    vocab_size = len(tokenizer.word_index) + 1   
-    emb = create_embedding_matrix(line, tokenizer.word_index, embedding_dim)
-    print(emb.shape)
-    for word in line.split(' '):
-        print(word, emb)
+    if line != "" or line != "\n":
+        tokenizer.fit_on_texts(line)
+        vocab_size = len(tokenizer.word_index) + 1   
+        emb = create_embedding_matrix(line, tokenizer.word_index, embedding_dim)
+
         
-    prediction = model.predict([emb])
-    print(prediction.shape)
-    print(line + "---->" + int(prediction))
-    time.sleep(10)
+        prediction = model.predict(emb)
+        idxs = np.argsort(prediction)[::-1][:1]
+
+        zipped =  zip(encoder.classes_, prediction)
+        sorting = (-prediction).argsort()
+        sorted_ = sorting[0][:1]
+
+        for value in sorted_:
+            predicted_label = encoder.classes_[value]
+        
+        print(line + "----> " + predicted_label)
+        time.sleep(60)
+        
