@@ -45,6 +45,7 @@ encoder.fit(emotions)
 encoded_Y = encoder.transform(emotions)
 y = to_categorical(encoded_Y)
 
+
 sentences_train,sentences_test,y_train,y_test = train_test_split(sentences, y, test_size=0.25, random_state=1000)
 tokenizer = Tokenizer(num_words=10000)
 tokenizer.fit_on_texts(sentences_train)
@@ -54,7 +55,7 @@ X_test = tokenizer.texts_to_sequences(sentences_test)
 
 vocab_size = len(tokenizer.word_index) + 1                          
 
-maxlen = 100
+maxlen = 64
 
 X_train = pad_sequences(X_train, padding='post', maxlen=maxlen)
 X_test = pad_sequences(X_test, padding='post', maxlen=maxlen)
