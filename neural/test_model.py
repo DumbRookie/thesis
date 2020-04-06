@@ -8,6 +8,7 @@ import keras
 import pandas as pd
 from gensim.models import Word2Vec
 from sklearn.preprocessing import LabelEncoder
+import gensim
 
 input = open('/Users/teoflev/Desktop/thesis_code/thesis/tweets/unseen_tweets.txt', "r")
 
@@ -28,9 +29,12 @@ encoder.fit(emotions)
 encoded_Y = encoder.fit_transform(emotions)
 
 
-
-
 embedding_dim = 64
+
+#Create new embeddings for unseen words
+unseenTweetsList = [gensim.utils.simple_preprocess(tweet) for tweet in input.readlines()]
+backup_w2v = Word2Vec(unseenTweetsList, min_count = 1, size = 64, workers= 3, sg=1)
+
 
 def create_embedding_matrix(text, word_index, embedding_dim):  
     embedding_matrix = np.zeros((vocab_size, embedding_dim))
@@ -38,7 +42,7 @@ def create_embedding_matrix(text, word_index, embedding_dim):
         try:
             vec = w2v[word.lower()]
         except:
-            vec = [1]*embedding_dim
+            vec = backup_w2v[word.lower()]
     for word, index in tokenizer.word_index.items():
         if index > vocab_size - 1:
             break
@@ -69,4 +73,3 @@ for line in input.readlines():
         
         print(line + "----> " + predicted_label)
         time.sleep(60)
-        

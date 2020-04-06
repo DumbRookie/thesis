@@ -10,7 +10,6 @@ import math
 from collections import defaultdict
 
 
-
 training_set = pd.read_csv('/Users/teoflev/Desktop/thesis_code/thesis/tweets/training_set_tweets.csv', encoding='utf-8-sig')
 
 tweets = training_set['Tweet'].values
@@ -53,8 +52,8 @@ print(df['γαλλία'])
 df.to_csv(r'/Users/teoflev/Desktop/thesis_code/thesis/resources/tfidf.csv', index= None)
 
 """
-"""
-for item in voc:
-    print(len(list(SKIP[item])), item)
-    time.sleep(0.5)
-"""
+
+# for item in voc:
+#     print(len(list(SKIP[item])), item)
+#     time.sleep(0.5)
+
